@@ -1,0 +1,10 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "etender-bot",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-09-01",
+  // Saatda bir: GitHub Actions-dan məlumat gəlirmi (watchdog). Tenderləri Actions çəkir.
+  "triggers": { "crons": ["0 * * * *"] },
+  "kv_namespaces": [{ "binding": "KV", "id": "b6a3232fbd9f424a9e65d63f3b5e8319" }],
+  "observability": { "enabled": true }
+}

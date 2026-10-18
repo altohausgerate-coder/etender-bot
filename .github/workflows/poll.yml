@@ -1,0 +1,37 @@
+name: etender poll
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: poll
+  cancel-in-progress: false
+
+jobs:
+  poll:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node scripts/poll.mjs
+        env:
+          WORKER_URL: ${{ secrets.WORKER_URL }}
+          INGEST_SECRET: ${{ secrets.INGEST_SECRET }}
+      # GitHub 60 gün commit olmayan repoda cron-u söndürür — 50 gündən bir boş commit
+      - name: keepalive
+        run: |
+          last=$(git log -1 --format=%ct)
+          if [ $(( $(date +%s) - last )) -gt $(( 50 * 86400 )) ]; then
+            git config user.name "etender-bot"
+            git config user.email "actions@users.noreply.github.com"
+            git commit --allow-empty -m "keepalive"
+            git push
+          fi
