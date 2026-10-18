@@ -1,5 +1,5 @@
-// GitHub Actions-da işləyir: etender.gov.az-dan bütün aktiv tenderləri çəkib Worker-ə göndərir.
-// (etender.gov.az Cloudflare IP-lərini bloklayır, ona görə Worker özü çəkə bilmir.)
+// Azərbaycan IP-li cihazda (Windows Task Scheduler → WSL poll.sh) işləyir: etender.gov.az-dan bütün aktiv tenderləri çəkib Worker-ə göndərir.
+// (etender.gov.az xarici IP-ləri, o cümlədən Cloudflare və GitHub-ı bloklayır.)
 // Sayt hər sorğuya X-Origin-Token tələb edir: {endpoint,id,keyword} JSON-u
 // saytın öz frontend bundle-ındakı AES-128-CBC açarı ilə şifrələnir.
 import crypto from "node:crypto";
