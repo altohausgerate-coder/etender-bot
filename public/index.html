@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="az">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>eTender izləyici</title>
+  <meta name="description" content="etender.gov.az-da açar sözlərə uyğun yeni tenderlər">
+  <meta name="theme-color" content="#0f766e">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="/icon-192.png">
+  <link rel="apple-touch-icon" href="/icon-180.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="eTender">
+  <link rel="stylesheet" href="/app.css">
+</head>
+<body>
+  <div id="login" class="login" hidden>
+    <form class="login-card" id="loginForm">
+      <img src="/icon-192.png" alt="" width="56" height="56">
+      <h1>eTender izləyici</h1>
+      <p id="loginHint">Daxil olmaq üçün parolu yazın.</p>
+      <input type="password" id="password" autocomplete="current-password" placeholder="Parol" required>
+      <button type="submit" class="btn primary" id="loginBtn">Daxil ol</button>
+      <p class="error" id="loginError"></p>
+    </form>
+  </div>
+
+  <div id="app" hidden>
+    <header class="top">
+      <div class="brand">
+        <img src="/icon-192.png" alt="" width="28" height="28">
+        <span>eTender izləyici</span>
+      </div>
+      <div class="status" id="status"></div>
+    </header>
+
+    <nav class="tabs" id="tabs">
+      <button data-tab="feed" class="active"><span class="ico">🔔</span><span>Bildirişlər</span><b class="badge" id="unread" hidden></b></button>
+      <button data-tab="all"><span class="ico">📋</span><span>Tenderlər</span></button>
+      <button data-tab="keywords"><span class="ico">🏷️</span><span>Açar sözlər</span></button>
+      <button data-tab="settings"><span class="ico">⚙️</span><span>Ayarlar</span></button>
+    </nav>
+
+    <main>
+      <!-- Bildirişlər -->
+      <section data-panel="feed">
+        <div class="section-head">
+          <h2>Açar sözlərə uyğun yeni tenderlər</h2>
+          <select id="feedFilter" aria-label="Açar söz filtri"><option value="">Bütün sözlər</option></select>
+        </div>
+        <div id="pushBanner" class="banner" hidden>
+          <div>
+            <b>Bildirişləri açın</b>
+            <span>Yeni tender çıxanda telefon/kompüterinizə bildiriş gəlsin — sayt bağlı olsa belə.</span>
+          </div>
+          <button class="btn primary" data-action="enable-push">Aç</button>
+        </div>
+        <div id="feedList" class="list"></div>
+      </section>
+
+      <!-- Bütün tenderlər -->
+      <section data-panel="all" hidden>
+        <div class="filters">
+          <input type="search" id="q" placeholder="Axtar: ad və ya təşkilat (məs. mebel, təmir…)" autocomplete="off">
+          <div class="filter-row">
+            <select id="type" aria-label="Növ">
+              <option value="">Bütün növlər</option>
+              <option value="open">Açıq tender</option>
+              <option value="quote">Kotirovka sorğusu</option>
+              <option value="offer">Təklif sorğusu</option>
+              <option value="single">Tək mənbə</option>
+            </select>
+            <select id="sort" aria-label="Sıralama">
+              <option value="new">Ən yenilər</option>
+              <option value="deadline">Son tarix yaxınlaşanlar</option>
+            </select>
+            <label class="check"><input type="checkbox" id="mine"> Yalnız açar sözlərim</label>
+            <label class="check"><input type="checkbox" id="expired"> Müddəti bitənlər də</label>
+          </div>
+        </div>
+        <p class="muted" id="allCount"></p>
+        <div id="allList" class="list"></div>
+        <button class="btn ghost more" id="more" hidden>Daha çox göstər</button>
+      </section>
+
+      <!-- Açar sözlər -->
+      <section data-panel="keywords" hidden>
+        <h2>Açar sözlər</h2>
+        <p class="muted">Bu sözlərdən biri tenderin adında və ya satınalan təşkilatın adında olsa, sizə bildiriş gələcək. "ə, ş, ç…" yazmasanız da tapılır.</p>
+        <form id="kwForm" class="kw-form">
+          <input id="kwInput" placeholder="Məs. mebel, kompüter, təmir" autocomplete="off">
+          <button class="btn primary" type="submit">Əlavə et</button>
+        </form>
+        <div id="kwList" class="kw-list"></div>
+      </section>
+
+      <!-- Ayarlar -->
+      <section data-panel="settings" hidden>
+        <h2>Ayarlar</h2>
+
+        <div class="card setting">
+          <div>
+            <h3>Bu cihazda bildirişlər</h3>
+            <p class="muted" id="pushInfo"></p>
+          </div>
+          <div class="setting-actions" id="pushActions"></div>
+        </div>
+
+        <div class="card setting">
+          <div>
+            <h3>Telegram-a da göndər</h3>
+            <p class="muted" id="tgInfo"></p>
+          </div>
+          <label class="switch"><input type="checkbox" id="tgToggle"><span></span></label>
+        </div>
+
+        <div class="card setting">
+          <div>
+            <h3>Yoxlama vəziyyəti</h3>
+            <p class="muted" id="checkInfo"></p>
+          </div>
+        </div>
+
+        <form class="card setting col" id="pwForm">
+          <h3>Parolu dəyiş</h3>
+          <input type="password" id="pwCurrent" placeholder="Hazırkı parol" autocomplete="current-password" required>
+          <input type="password" id="pwNext" placeholder="Yeni parol (ən azı 8 simvol)" autocomplete="new-password" minlength="8" required>
+          <button class="btn" type="submit">Dəyiş</button>
+          <p class="muted" id="pwMsg"></p>
+        </form>
+
+        <button class="btn ghost" id="logout">Çıxış</button>
+      </section>
+    </main>
+  </div>
+
+  <div id="toast" class="toast" hidden></div>
+  <script src="/app.js" type="module"></script>
+</body>
+</html>

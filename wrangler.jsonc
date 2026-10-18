@@ -3,8 +3,14 @@
   "name": "etender-bot",
   "main": "src/index.ts",
   "compatibility_date": "2026-09-01",
-  // Saatda bir: GitHub Actions-dan məlumat gəlirmi (watchdog). Tenderləri Actions çəkir.
+  // Saatda bir watchdog: lokal poller-dən məlumat gəlirmi. Tenderləri kompüterdəki poll.sh çəkir.
   "triggers": { "crons": ["0 * * * *"] },
   "kv_namespaces": [{ "binding": "KV", "id": "b6a3232fbd9f424a9e65d63f3b5e8319" }],
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS",
+    "not_found_handling": "single-page-application",
+    "run_worker_first": ["/api/*", "/ingest", "/webhook", "/setup"]
+  },
   "observability": { "enabled": true }
 }
